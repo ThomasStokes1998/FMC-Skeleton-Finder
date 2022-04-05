@@ -126,7 +126,7 @@ class ScrambleSearch:
                 maxeval = besteval
                 maxlen = bestlen
                 maxpieces = bestpieces
-            if besteval >= 0:
+            if besteval > 0:
                 train_data["scrambles"].append(self.scramble)
                 train_data["moves"].append(beststr)
                 train_data["evals"].append(besteval)
