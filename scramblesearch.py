@@ -115,7 +115,7 @@ class ScrambleSearch:
                 if randsearch:
                     r = random.uniform(0, sum(nodescores))
                     movesum = 0
-                    for j, ns in enumerate(nodescore):
+                    for j, ns in enumerate(nodescores):
                         movesum += ns
                         if movesum > r:
                             maxmove = self.validmoves[j]
