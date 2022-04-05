@@ -116,11 +116,13 @@ class ScrambleSearch:
                     r = random.uniform(0, sum(nodescores))
                     movesum = 0
                     for j, ns in enumerate(nodescores):
-                        movesum += ns
-                        if movesum > r:
-                            maxmove = self.validmoves[j]
-                            maxnode = searchpath + maxmove
-                            break
+                        m = self.validmoves[j]
+                        if k == 0 or k > 0 and lastmove[0] != m[0]:
+                            movesum += ns
+                            if movesum > r:
+                                maxmove = m
+                                maxnode = searchpath + maxmove
+                                break
                 # Update the nodes
                 for j, m in enumerate(self.validmoves):
                     if k == 0 or k > 0 and lastmove[0] != m[0]:
