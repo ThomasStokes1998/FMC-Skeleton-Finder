@@ -115,14 +115,15 @@ class ScrambleSearch:
                 if randsearch:
                     r = random.uniform(0, sum(nodescores))
                     movesum = 0
-                    for j, ns in enumerate(nodescores):
-                        m = self.validmoves[j]
+                    nscount = 0
+                    for j, m in enumerate(self.validmoves):
                         if k == 0 or k > 0 and lastmove[0] != m[0]:
-                            movesum += ns
-                            if movesum > r:
+                            movesum += nodescores[nscount]
+                            if movesum >= r:
                                 maxmove = m
-                                maxnode = searchpath + maxmove
+                                maxnode = searchpath + m
                                 break
+                            nscount += 1
                 # Update the nodes
                 for j, m in enumerate(self.validmoves):
                     if k == 0 or k > 0 and lastmove[0] != m[0]:
