@@ -1,4 +1,5 @@
 from RubiksCube import Cube
+import random
 
 rc = Cube()
 validmoves = rc.poss_moves[:18]
@@ -75,7 +76,7 @@ class ScrambleSearch:
 
     # Runs through a decision tree to find the best move sequences according to the policy
     # Returns a dictionary with the training data from the search
-    def search(self, policy, maxmoves: int=20, trackprog: bool=True, printfreq: int=100) -> dict:
+    def search(self, policy, maxmoves: int=20, randsearch: bool = False, trackprog: bool=True, printfreq: int=100) -> dict:
         train_data = {"scrambles":[], "moves":[], "evals":[]}
         maxeval = -5
         maxlen = 20
@@ -94,6 +95,8 @@ class ScrambleSearch:
                 maxmove = ""
                 maxnode = searchpath
                 maxscore = 0
+                if randsearch:
+                    nodescores = []
                 # Loop through the nodes to find the highest scoring node
                 for j, m in enumerate(self.validmoves):
                     # Ensures a different face is turned
@@ -102,10 +105,22 @@ class ScrambleSearch:
                         if nodepath not in self.nodes:
                             self.nodes[nodepath] = Node(nodepath, self.initstate, priorprobs[j])
                         nodescore = self.nodes[nodepath].score()
-                        if nodescore > maxscore:
+                        if randsearch:
+                            nodescores.append(nodescore)
+                        elif nodescore > maxscore:
                             maxmove = m
                             maxnode = nodepath
                             maxscore = nodescore
+                # Find the move if random search enabled
+                if randsearch:
+                    r = random.uniform(0, sum(nodescores))
+                    movesum = 0
+                    for j, ns in enumerate(nodescore):
+                        movesum += ns
+                        if movesum > r:
+                            maxmove = self.validmoves[j]
+                            maxnode = searchpath + maxmove
+                            break
                 # Update the nodes
                 for j, m in enumerate(self.validmoves):
                     if k == 0 or k > 0 and lastmove[0] != m[0]:
